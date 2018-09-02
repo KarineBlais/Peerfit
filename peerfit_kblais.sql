@@ -145,8 +145,82 @@ All the fields were combined in the new table*/
 What opportunities do you see to improve data storage and 
 standardization for these datasets?*/
 
+/*After reviewing the submitted tables (mindbody_reservations and clubready_reservations),
+ I would propose to work with the partners to track and submit similar information among 
+ them, which would improve consistency and comparability. For example, both tables are 
+ storing similar information but use different field names. Is this the same information?
+ I was able to deduct that check_in_at and signed_in_at fields were tracking the same 
+ information however, for consistency I would suggest that every partners use the same 
+ names for these fields:
+ 
+	Checked_in_at vs. Signed_in_at
+	Reserved_for vs. Class_time_at
+	Canceled vs. Canceled_at
+
+Also, although canceled and canceled_at fields are reporting similar information they are 
+different type of attributes. Canceled is VARCHAR and canceled_at is DATETIME. I would 
+suggest to request to track this variable as DATETIME to ensure that important information
+is not lost. 
+
+In addition, I found some inconsistencies in the datasets that would need to be addressed.
+
+-	In the Mindbody table, ID 9,29,39,72 have a reserved_ at date > than class_time_at 
+date. This can definitely skew the analysis and we should make sure that a member cannot 
+reserve a class that was completed.
+
+-	In the Clubready table, ID 8,35,47,58,85,97 had a “t” in the canceled field, but a 
+signed_in_at date as well. The class should not be canceled and completed at the same 
+time. I would propose to check if the reasoning behind the canceled field is correct.
+
+Also, in the Mindbody table ID 28, 38, 46 are missing the studio_key information. To 
+avoid missing data, I would suggest to force that all applicable fields are populated 
+when the reservation is entered.
+
+Lastly, I would propose that every partners track similar information and I would 
+recommend to store the studio and class details in separated tables. 
+	Studio Table
+•	studio_address_street
+•	studio_address_city
+•	studio_address_state
+•	studio_address_zip
+	Class Table
+•	instructor_full_name
+•	level */
+
 /*#9
 What forecasting opportunities do you see with a dataset like this and why?*/
 
+/*The mindbody table contains additional fields that are particularly relevant for forecasting. 
+We can segment the reservation details by member_id, studio_key, address details, by date and time. 
+We also have multiple date and time fields, such as the viewed date, reservation date, cancelation 
+date, class date and checked date. These details give us a better understanding of each customer’s 
+behavior and allow us to make better data-driven business decisions.
+
+For example, the reservations are done on average 2.4 days before the class date and 0.7 days 
+after viewing the information. 15% of all reservations (mostly Crossfit and Yoga) were cancelled 
+on average within 2.1 days after they were reserved. In January and February, all cancelled classes 
+were reserved during the evening (5-10pm) or morning (7-11pm) and were also scheduled during the 
+evening and morning. Also, 17% of all reservations (mostly Crossfit and Yoga) were simply abandon. 
+82% of all abandoned classes were reserved at night (10pm-6am). In brief, 68% of all reserved classes 
+in January and February were checked in. The Pilate and Strength classes have the highest check-in 
+rate with 83% and 82% respectively and Crossfit has the lowest with 45%. Also, classes reserved in 
+RI have the highest check-in rate with 83% and NY has the lowest with 50%.
+
+Overall, this information is very relevant for forecasting. For example, 2-3 days before 
+classes, we can send automatic invites to customers that have not reserved knowing that 
+most of our customers reserve 2.4 days before the class. We can also send different automatic 
+reminders to our customers that reserved at night to increase the possibility they check in, 
+knowing that 82% of our abandon were reserved at night. Also, knowing what the cancellation and 
+abandon rates are allow us to forecast the completed reservations.*/
+
 /*#10
 What other data would you propose we gather to make reporting/forecasting more robust and why?*/
+
+/*To improve reporting/forecasting, I would propose to gather additional customer information 
+that would help us expand our understanding of our customers. I would suggest to track customer 
+referrals. Are referrals good indicator of completed reservations? I would speculate that in the 
+case that a customer was referred and reserved a class, there is a higher chance the customer will 
+check in. Also, I would propose to track class review information. Knowing the review rate for each 
+class would allow us to include this information in our model to forecast the completed reservations. 
+Finally, it would be interesting to see what the complete reservation rate is by the duration of the 
+class.
